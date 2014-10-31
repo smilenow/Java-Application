@@ -1,6 +1,6 @@
 package Calculator;
 
-import java.util.Collection;
+import java.math.BigInteger;
 import java.util.Collections;
 import java.util.Scanner;
 import java.util.Stack;
@@ -38,33 +38,35 @@ public class Calculator {
 	
 	private static String cal(String x,String y,char op){
 		String ret = "";
+		BigInteger bx = new BigInteger(x);
+		BigInteger by = new BigInteger(y);
 		switch (op){
 			case '+':
-				ret = String.valueOf(Integer.parseInt(x) + Integer.parseInt(y));
+				ret = String.valueOf(bx.add(by));
 				break;
 			case '-':
-				ret = String.valueOf(Integer.parseInt(x) - Integer.parseInt(y));
+				ret = String.valueOf(bx.subtract(by));
 				break;
 			case '*':
-				ret = String.valueOf(Integer.parseInt(x) * Integer.parseInt(y));
+				ret = String.valueOf(bx.multiply(by));
 				break;
 			case '/':
-				if (Math.abs(Integer.parseInt(y)) == 0 ){
+				if (by.compareTo(BigInteger.ZERO) == 0 ){
 					legal = false;
 					ErrorMessage = "Divided by zero!!!";
 					ret = "0";
 					break;
 				}
-				ret = String.valueOf(Integer.parseInt(x) / Integer.parseInt(y));
+				ret = String.valueOf(bx.divide(by));
 				break;
 			case '%':
-				if (Math.abs(Integer.parseInt(y)) == 0 ){
+				if (by.compareTo(BigInteger.ZERO) == 0 ){
 					legal = false;
 					ErrorMessage = "Divided by zero!!!";
 					ret = "0";
 					break;
 				}
-				ret = String.valueOf(Integer.parseInt(x) % Integer.parseInt(y));
+				ret = String.valueOf(bx.remainder(by));
 				break;
 		}
 		return ret;
@@ -120,13 +122,13 @@ public class Calculator {
 		return true;
 	}
 	
-	private static int GetResult(String expr){
+	private static BigInteger GetResult(String expr){
 		Stack<String> resStack = new Stack<String>();
 		
 		if (!ChangeExprIntoPostfix(expr)){
 			legal = false;
 			ErrorMessage = "Syntax Error!!";
-			return -1;
+			return BigInteger.ZERO;
 		}
 		
 		Collections.reverse(postfix);
@@ -136,13 +138,13 @@ public class Calculator {
 			if (!isOperator(now.charAt(0))) resStack.push(now);
 			else {
 				if (!resStack.isEmpty()) y = resStack.pop();
-				else {legal = false; ErrorMessage = "Syntax Error!!"; return -1;}
+				else {legal = false; ErrorMessage = "Syntax Error!!"; return BigInteger.ZERO;}
 				if (!resStack.isEmpty()) x = resStack.pop();
-				else {legal = false; ErrorMessage = "Syntax Error!!"; return -1;}
+				else {legal = false; ErrorMessage = "Syntax Error!!"; return BigInteger.ZERO;}
 				resStack.push(cal(x, y, now.charAt(0)));
 			}
 		}
-		return Integer.parseInt(resStack.pop());
+		return new BigInteger(resStack.pop());
 	}
 	
 	public static void main(String[] args) {
@@ -151,7 +153,7 @@ public class Calculator {
 		String s = s1.replace(" ", ""); // delete " "
 		while (s1 != null){
 			legal = true;
-			int result = 0;
+			BigInteger result = BigInteger.ZERO;
 			if (s.charAt(0) == '-' || s.charAt(0) == '+') s = '0' + s;
 			result = GetResult(s);
 			if (legal) System.out.println(result);
