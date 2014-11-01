@@ -87,9 +87,14 @@ public class Calculator {
 				
 				char opStackpeek = opStack.peek();
 				if (nowch == ')'){
-					while (opStack.peek() != '(' )
+					while (opStack.peek() != '(' && opStack.peek() != '#' )
 						postfix.push(String.valueOf(opStack.pop()));
-					opStack.pop();
+					if (opStack.peek() == '(') opStack.pop();
+					else {
+						legal = false;
+						ErrorMessage = "Syntax Error!!";
+						return false;
+					}
 				}
 				else{
 					while (nowch != '(' && opStackpeek != '#' && GetPriority(nowch)<=GetPriority(opStackpeek)){
@@ -151,7 +156,7 @@ public class Calculator {
 		Scanner cin = new Scanner(System.in);
 		String s1 = cin.nextLine();
 		String s = s1.replace(" ", ""); // delete " "
-		while (s1 != null){
+		while (s1 != null && !s1.equals("EOF")){
 			legal = true;
 			BigInteger result = BigInteger.ZERO;
 			if (s.charAt(0) == '-' || s.charAt(0) == '+') s = '0' + s;
