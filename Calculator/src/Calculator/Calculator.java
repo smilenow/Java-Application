@@ -129,6 +129,7 @@ public class Calculator {
 	
 	private static BigInteger GetResult(String expr){
 		Stack<String> resStack = new Stack<String>();
+		while (!postfix.empty()) postfix.pop();
 		
 		if (!ChangeExprIntoPostfix(expr)){
 			legal = false;
