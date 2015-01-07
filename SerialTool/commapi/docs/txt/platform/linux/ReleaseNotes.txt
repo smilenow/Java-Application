@@ -1,0 +1,7 @@
+========================================================================
+ CHANGES IN 3.0
+========================================================================
+
+   - Support added for Linux in 3.0 for the Java Desktop System and Red Hat AS 3.0 Linux
+     platforms
+
